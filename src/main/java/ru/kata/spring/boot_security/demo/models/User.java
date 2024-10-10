@@ -10,36 +10,28 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
-    @Column(name = "name")
     private String name;
-
-    @Column(name = "surname")
     private String surname;
-
-    @Column(name = "age")
     private Integer age;
 
-    @Column(name = "username", unique = true, nullable = false)
+    @Column(unique = true, nullable = false)
     private String username;
 
-    @Column(name = "password", nullable = false)
+    @Column(nullable = false)
     private String password;
 
-    @Column(name = "email")
     private String email;
 
-    @Column(name = "roles")
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "users_roles",
+    @JoinTable(
+            name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 
-    public User() {
-    }
+    public User() {}
 
     public User(String name, String surname, Integer age,
                 String username, String password, String email) {
@@ -51,16 +43,13 @@ public class User {
         this.email = email;
     }
 
-    public User(String name, String surname, Integer age, String username, String password, String email, Set<Role> roles) {
-        this.name = name;
-        this.surname = surname;
-        this.age = age;
-        this.username = username;
-        this.password = password;
-        this.email = email;
+    public User(String name, String surname, Integer age,
+                String username, String password, String email, Set<Role> roles) {
+        this(name, surname, age, username, password, email);
         this.roles = roles;
     }
 
+    // Геттеры и сеттеры
     public Long getId() {
         return id;
     }
@@ -93,14 +82,6 @@ public class User {
         this.age = age;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getUsername() {
         return username;
     }
@@ -115,6 +96,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Set<Role> getRoles() {
@@ -133,7 +122,6 @@ public class User {
                 ", surname='" + surname + '\'' +
                 ", age=" + age +
                 ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 ", roles=" + roles +
                 '}';
@@ -144,11 +132,12 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id);
+        return Objects.equals(id, user.id) &&
+                Objects.equals(username, user.username); // добавлено
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(id, username); // добавлено
     }
 }
