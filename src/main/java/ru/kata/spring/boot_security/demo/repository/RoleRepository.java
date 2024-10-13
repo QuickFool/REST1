@@ -9,7 +9,7 @@ import java.util.Set;
 public interface RoleRepository extends JpaRepository<Role, Long> {
 
     @Query("SELECT r FROM Role r LEFT JOIN FETCH r.users WHERE r.id = :id")
-    Role findByIdWithUsers(Long id);
+    Role findByUsername(Long id);
 
     @Query("SELECT DISTINCT r FROM Role r LEFT JOIN FETCH r.users")
     Set<Role> findAllWithUsers();

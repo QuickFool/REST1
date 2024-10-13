@@ -5,16 +5,28 @@
 </head>
 <body>
 <h1>Edit User</h1>
-<form th:action="@{/admin/{id}(id=${user.id})}" th:object="${user}" method="patch">
-  <label for="firstName">First Name:</label>
-  <input type="text" id="firstName" th:field="*{firstName}" required />
+<form th:action="@{/admin/{id}(id=${user.id})}" th:object="${user}" method="post">
+  <label for="name">First Name:</label>
+  <input type="text" id="name" th:field="*{name}" required />
   <br />
-  <label for="lastName">Last Name:</label>
-  <input type="text" id="lastName" th:field="*{lastName}" required />
+  <label for="surname">Last Name:</label>
+  <input type="text" id="surname" th:field="*{surname}" required />
+  <br />
+  <label for="age">Age:</label>
+  <input type="number" id="age" th:field="*{age}" required />
+  <br />
+  <label for="username">Username:</label>
+  <input type="text" id="username" th:field="*{username}" required />
+  <br />
+  <label for="email">Email:</label>
+  <input type="email" id="email" th:field="*{email}" required />
   <br />
   <label for="roles">Roles:</label>
   <select th:field="*{roles}" multiple>
-    <option th:each="role : ${allRoles}" th:value="${role.id}" th:text="${role.name}" th:selected="${user.roles.contains(role)}"></option>
+    <option th:each="role : ${allRoles}"
+            th:value="${role.id}"
+            th:text="${role.name}"
+            th:selected="${user.roles.contains(role)}"></option>
   </select>
   <br />
   <button type="submit">Update User</button>

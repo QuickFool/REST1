@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
-import org.hibernate.Hibernate;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
@@ -28,32 +27,21 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public List<User> findAll() {
-        List<User> users = userRepository.findAll();
-        for (User user : users) {
-            Hibernate.initialize(user.getRoles());
-        }
-        return users;
+        return userRepository.findAll(); // Hibernate.initialize больше не нужен
     }
 
     @Override
     @Transactional(readOnly = true)
     public User findOne(Long id) {
         return userRepository.findById(id)
-                .map(user -> {
-                    Hibernate.initialize(user.getRoles());
-                    return user;
-                })
                 .orElseThrow(() -> new EntityNotFoundException("User with id " + id + " not found"));
     }
 
     @Override
     @Transactional(readOnly = true)
     public User findByUsername(String username) {
-        User user = userRepository.findByUsernameWithRoles(username);
-        if (user != null) {
-            Hibernate.initialize(user.getRoles());
-        }
-        return user;
+        return userRepository.findByUsername(username) // Тут Hibernate.initialize больше не нужен
+                .orElseThrow(() -> new EntityNotFoundException("User with username " + username + " not found"));
     }
 
     @Override
@@ -83,12 +71,5 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void delete(Long id) {
         userRepository.deleteById(id);
-    }
-
-    // Метод для инициализации ролей (ленивая загрузка)
-    private void initializeRoles(User user) {
-        if (user != null) {
-            Hibernate.initialize(user.getRoles());
-        }
     }
 }

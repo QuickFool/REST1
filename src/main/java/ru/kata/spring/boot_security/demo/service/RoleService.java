@@ -12,7 +12,4 @@ public interface RoleService {
 
     // Метод для получения всех ролей с подгруженными пользователями
     Set<Role> findAllWithUsers();
-
-    // Метод для получения конкретной роли с подгруженными пользователями по ID
-    Role findByIdWithUsers(Long id);
 }

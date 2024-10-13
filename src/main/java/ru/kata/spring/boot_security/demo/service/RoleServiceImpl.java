@@ -34,6 +34,6 @@ public class RoleServiceImpl implements RoleService {
     // Метод для подгрузки конкретной роли с пользователями
     @Transactional(readOnly = true)
     public Role findByIdWithUsers(Long id) {
-        return roleRepository.findByIdWithUsers(id);
+        return roleRepository.findByUsername(id);
     }
 }
