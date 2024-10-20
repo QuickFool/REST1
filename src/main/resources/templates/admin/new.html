@@ -1,43 +1,41 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
-  <title>Create New User</title>
+  <meta charset="UTF-8">
+  <title>New User</title>
 </head>
 <body>
-<h1>Create New User</h1>
-<form th:action="@{/admin}" th:object="${newUser}" method="post">
-  <label for="name">Name:</label>
-  <input type="text" id="name" th:field="*{name}" required />
-  <br />
-
-  <label for="surname">Surname:</label>
-  <input type="text" id="surname" th:field="*{surname}" required />
-  <br />
-
-  <label for="age">Age:</label>
-  <input type="number" id="age" th:field="*{age}" required />
-  <br />
-
-  <label for="username">Username:</label>
-  <input type="text" id="username" th:field="*{username}" required />
-  <br />
-
-  <label for="password">Password:</label>
-  <input type="password" id="password" th:field="*{password}" required />
-  <br />
-
-  <label for="email">Email:</label>
-  <input type="email" id="email" th:field="*{email}" required />
-  <br />
-
-  <label for="roles">Roles:</label>
-  <select th:field="*{roles}" multiple>
-    <option th:each="role : ${allRoles}" th:value="${role.id}" th:text="${role.name}"></option>
-  </select>
-  <br />
-
-  <button type="submit">Create User</button>
+<form th:method="POST" th:action="@{/admin}" th:object="${newUser}">
+  <label for="username">Введите имя пользователя: </label>
+  <input type="text" th:field="*{username}" id="username"/>
+  <br/>
+  <label for="password">Введите пароль: </label>
+  <input type="text" th:field="*{password}" id="password"/>
+  <br/>
+  <label for="name">Введите имя: </label>
+  <input type="text" th:field="*{name}" id="name"/>
+  <br/>
+  <label for="surname">Введите фамилию: </label>
+  <input type="text" th:field="*{surname}" id="surname"/>
+  <br/>
+  <label for="age">Введите возраст: </label>
+  <input type="text" th:field="*{age}" id="age"/>
+  <br/>
+  <label for="email">Введите почту: </label>
+  <input type="text" th:field="*{email}" id="email"/>
+  <br/>
+  <p>
+    <label>Roles:
+      <input type="checkbox" name="roles"
+             th:each="role : ${allRoles}"
+             th:text="${role.name}"
+             th:value="${role.id}"
+             th:field="*{roles}"
+      />
+    </label>
+  </p>
+  <input type="submit" value="Создать пользователя">
 </form>
-<a href="/admin">Back to Admin Index</a>
 </body>
 </html>

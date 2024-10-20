@@ -1,31 +1,97 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<html lang="en">
+<html lang="ru"
+      xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="UTF-8">
-    <title>User info</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Spring Security Example</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
 </head>
 <body>
-<h1>Добро пожаловать на вашу личную страницу!</h1>
-<h2>Ваши пользовательские данные</h2>
-<b>ID:</b>
-<p th:text="${user.getId()}">ID</p>
-<b>NAME:</b>
-<p th:text="${user.getName()}">NAME</p>
-<b>SURNAME:</b>
-<p th:text="${user.getSurname()}">SURNAME</p>
-<b>AGE:</b>
-<p th:text="${user.getAge()}">AGE</p>
-<b>USERNAME:</b>
-<p th:text="${user.getUsername()}">USERNAME</p>
-<b>PASSWORD:</b>
-<p th:text="${user.getPassword()}">PASSWORD</p>
-<b>ROLES:</b>
-<p th:text="${user.getRoles()}">ROLES</p>
+<!-- Верхний нав. бар -->
+<nav class="navbar navbar-expand-md bg-dark navbar-dark">
+    <div class="container-fluid bg-dark text-white">
+                <span class="navbar-brand mb-0 h1">
+                    <h4><span sec:authentication="name"></span> with roles <span
+                            sec:authentication="principal.authorities"></span></h4>
+                </span>
+    </div>
 
-<form th:attr="action=@{/logout}">
-    <input type="submit" value="LOGOUT"/>
-</form>
+    <!-- Logout button -->
+    <a th:href="@{/logout}"
+       class="btn btn-dark float-right">Logout</a>
+</nav>
 
+<!-- Left nav bar -->
+<div class="container-fluid">
+    <div class="row flex-nowrap h-100">
+        <div class="col-2 pt-2 bg-white h-100 d-inline-block">
+            <!--            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">-->
+            <ul class="nav nav-fill flex-column align-items-left" id="menu">
+                <div sec:authorize="hasRole('ADMIN')">
+                    <li class="nav-item">
+                        <a href="/admin" class="nav-link align-middle px-0">
+                            <button class="btn w-100 text-start" type="button">Admin</button>
+                        </a>
+                    </li>
+                </div>
+                <li>
+                    <a href="/user" class="nav-link px-0 align-middle">
+                        <button class="btn btn-primary w-100 text-start" type="button">User</button>
+                    </a>
+                </li>
+            </ul>
+            <!--            </div>-->
+        </div>
+        <div class="col-10 py-3 bg-light h-100 d-inline-block">
+            <h1> User information-page </h1>
+
+            <!-- Tab panes -->
+            <div class="tab-content border">
+                <div class="tab-pane container active" id="users">
+                    <div class="container">
+                        <div class="row py-3">
+                            <h3> About user </h3>
+                        </div>
+
+                        <hr/>
+
+                        <table class="table table-striped">
+                            <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Surname</th>
+                                <th>Age</th>
+                                <th>Email</th>
+                                <th>Username</th>
+                                <th>Roles</th>
+                            </tr>
+                            </thead>
+
+                            <tbody class="table-group-divider">
+                            <tr>
+                                <td th:text="${user.getId()}"></td>
+                                <td th:text="${user.getName()}"></td>
+                                <td th:text="${user.getSurname()}"></td>
+                                <td th:text="${user.getAge()}"></td>
+                                <td th:text="${user.getEmail()}"></td>
+                                <td th:text="${user.getUsername()}"></td>
+                                <td th:text="${user.getRoles()}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous"></script>
 </body>
 </html>
