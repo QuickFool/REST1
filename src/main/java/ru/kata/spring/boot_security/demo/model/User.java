@@ -1,41 +1,44 @@
-package ru.kata.spring.boot_security.demo.models;
-
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+package ru.kata.spring.boot_security.demo.model;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @Table(name = "users")
-public class User  implements UserDetails {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "surname")
     private String surname;
+
+    @Column(name = "age")
     private Integer age;
 
-    @Column(unique = true, nullable = false)
+    @Column(name = "username", unique = true, nullable = false)
     private String username;
 
-    @Column(nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
+    @Column(name = "email")
     private String email;
 
+    @Column(name = "roles")
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "users_roles",
+    @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles;
+    private Set<ru.kata.spring.boot_security.demo.model.Role> roles;
 
-    public User() {}
+    public User() {
+    }
 
     public User(String name, String surname, Integer age,
                 String username, String password, String email) {
@@ -47,13 +50,16 @@ public class User  implements UserDetails {
         this.email = email;
     }
 
-    public User(String name, String surname, Integer age,
-                String username, String password, String email, Set<Role> roles) {
-        this(name, surname, age, username, password, email);
+    public User(String name, String surname, Integer age, String username, String password, String email, Set<ru.kata.spring.boot_security.demo.model.Role> roles) {
+        this.name = name;
+        this.surname = surname;
+        this.age = age;
+        this.username = username;
+        this.password = password;
+        this.email = email;
         this.roles = roles;
     }
 
-    // Геттеры и сеттеры
     public Long getId() {
         return id;
     }
@@ -86,37 +92,20 @@ public class User  implements UserDetails {
         this.age = age;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getUsername() {
         return username;
     }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return false;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return false;
-    }
-
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles;
     }
 
     public String getPassword() {
@@ -127,19 +116,11 @@ public class User  implements UserDetails {
         this.password = password;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Set<Role> getRoles() {
+    public Set<ru.kata.spring.boot_security.demo.model.Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<Role> roles) {
+    public void setRoles(Set<ru.kata.spring.boot_security.demo.model.Role> roles) {
         this.roles = roles;
     }
 
@@ -151,22 +132,9 @@ public class User  implements UserDetails {
                 ", surname='" + surname + '\'' +
                 ", age=" + age +
                 ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 ", roles=" + roles +
                 '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(id, user.id) &&
-                Objects.equals(username, user.username); // добавлено
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, username); // добавлено
     }
 }

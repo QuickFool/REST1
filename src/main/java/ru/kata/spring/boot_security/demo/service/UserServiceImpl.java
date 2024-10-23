@@ -4,10 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.models.User;
+import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +15,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -24,30 +24,19 @@ public class UserServiceImpl implements UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<User> findAll() {
-        return userRepository.findAll(); // Hibernate.initialize больше не нужен
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public User findOne(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User with id " + id + " not found"));
+    public User getUserById(Long id) {
+        Optional<User> user = userRepository.findById(id);
+        return user.orElse(null);
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username) // Тут Hibernate.initialize больше не нужен
-                .orElseThrow(() -> new EntityNotFoundException("User with username " + username + " not found"));
-    }
-
-    @Override
     @Transactional
-    public boolean save(User user) {
-        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+    public boolean saveUser(User user) {
+        Optional<User> optionalUser = userRepository.findByUsername(user.getUsername());
+        if (optionalUser.isPresent()) {
             return false;
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -55,21 +44,14 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
-    @Override
     @Transactional
-    public void update(Long id, User updatedUser) {
-        User existingUser = findOne(id);
-
-        updatedUser.setId(id);
-        if (!updatedUser.getPassword().equals(existingUser.getPassword())) {
-            updatedUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
-        }
+    public void updateUser(User updatedUser) {
+        updatedUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
         userRepository.save(updatedUser);
     }
 
-    @Override
     @Transactional
-    public void delete(Long id) {
+    public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
 }
