@@ -15,13 +15,21 @@ public class Role implements GrantedAuthority {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
-    public Role(String roleAdmin) {
+    // Конструктор по умолчанию
+    public Role() {
     }
 
+    // Конструктор с именем роли
+    public Role(String name) {
+        this.name = name;
+    }
+
+    // Конструктор с id
     public Role(Long id) {
         this.id = id;
     }
 
+    // Конструктор с id и именем
     public Role(Long id, String name) {
         this.id = id;
         this.name = name;
